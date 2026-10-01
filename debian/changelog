@@ -1,0 +1,11 @@
+hptiop-dkms (2.0.0) unstable; urgency=medium
+
+  * Out-of-tree hptiop driver for HighPoint RocketRAID 3xxx/4xxx, based on the
+    upstream Linux v6.8 driver.
+  * Add /proc/scsi/hptiop/<host> so the HighPoint RAID management service
+    detects the controller.
+  * Map HighPoint management commands bidirectionally for strict IOMMUs.
+  * Register and remove devices on firmware hot-plug notifications.
+  * Support Ubuntu 24.04 (6.8) and Ubuntu 26.04 (7.0) kernels.
+
+ -- Jonathan Glanz <jonathan.glanz@gmail.com>  Thu, 01 Oct 2026 11:30:00 -0400

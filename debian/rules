@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+# SPDX-License-Identifier: GPL-2.0-only
+VERSION := $(shell dpkg-parsechangelog -SVersion)
+DEST    := debian/hptiop-dkms/usr/src/hptiop-$(VERSION)
+
+%:
+	dh $@
+
+override_dh_auto_build override_dh_auto_install override_dh_auto_clean override_dh_auto_test:
+	@:
+
+override_dh_install:
+	install -d $(DEST)/src
+	install -m0644 src/Kbuild src/hptiop.c src/hptiop.h src/hptiop_compat.h $(DEST)/src/
+
+override_dh_dkms:
+	dh_dkms -V $(VERSION) -- dkms.conf

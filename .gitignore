@@ -1,0 +1,22 @@
+# Build output
+/build/
+*.o
+*.ko
+*.mod
+*.mod.c
+*.cmd
+.*.cmd
+Module.symvers
+modules.order
+.tmp_versions/
+
+# Debian build products
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/hptiop-dkms/
+/debian/*.substvars
+/debian/*.debhelper.log
+
+# checkpatch cache
+.checkpatch-camelcase.*

@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: GPL-2.0-only
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: static checks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+      - name: Fetch kernel reference sources and checkpatch
+        run: make kernel-tools
+      - name: Session jargon / names
+        run: make jargon
+      - name: Version consistency
+        run: make version-check
+      - name: shellcheck
+        run: make shellcheck
+      - name: Discovery test (fixtures)
+        run: make discovery-test
+      - name: checkpatch
+        run: make checkpatch
+
+  package:
+    name: package (.deb)
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build hptiop-dkms and run lintian
+        run: IN_CONTAINER=1 scripts/build-deb.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hptiop-dkms-deb
+          path: build/deb/*.deb
+          if-no-files-found: error
+
+  kernel:
+    name: ${{ matrix.image }}
+    needs: package
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each image builds against whatever linux-headers-generic its own
+        # archive provides at run time; no kernel version is pinned.
+        image:
+          - ubuntu:24.04
+          - ubuntu:26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: hptiop-dkms-deb
+          path: build/deb
+      - name: W=1 build and sparse against the archive's kernel headers
+        run: IN_CONTAINER=1 scripts/container-build.sh --image "${{ matrix.image }}" w1 sparse
+      - name: Report resolved kernel
+        run: |
+          krel=$(cat build/container/*/kernel-release)
+          echo "::notice title=${{ matrix.image }} kernel::$krel"
+          echo "Built against **$krel** (${{ matrix.image }})" >> "$GITHUB_STEP_SUMMARY"
+      - name: DKMS install/remove and package install/purge
+        run: IN_CONTAINER=1 scripts/dkms-container-test.sh --image "${{ matrix.image }}"

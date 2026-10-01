@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-only
+obj-m := hptiop.o
+
+HPTIOP_VERSION ?= 0.0.0-unknown
+ccflags-y += -DHPTIOP_VERSION=\"$(HPTIOP_VERSION)\"

@@ -1,0 +1,196 @@
+RocketRAID 3xxx/4xxx Controller Linux Open Source Driver
+Copyright (C) 2017 HighPoint Technologies, Inc. All rights reserved.
+
+1. Overview
+2. Build the driver as a kernel module
+3. Revision History
+4. Technical support and service
+
+#############################################################################
+1. Overview
+#############################################################################
+
+  This package contains Linux driver code for HighPoint RocketRAID 3xxx/4xxx
+  controller. You can use it to build the driver module for custom
+  Linux kernels. The latest tested kernel version is 4.0.5, it is not 
+  sure this open source can work on later kernel version.
+	
+  NO WARRANTY
+
+  THE DRIVER SOURCE CODE HIGHPOINT PROVIDED IS FREE OF CHARGE, AND THERE IS
+  NO WARRANTY FOR THE PROGRAM. THERE ARE NO RESTRICTIONS ON THE USE OF THIS
+  FREE SOURCE CODE. HIGHPOINT DOES NOT PROVIDE ANY TECHNICAL SUPPORT IF THE
+  CODE HAS BEEN CHANGED FROM ORIGINAL SOURCE CODE.
+
+  LIMITATION OF LIABILITY
+
+  IN NO EVENT WILL HIGHPOINT BE LIABLE FOR DIRECT, INDIRECT, SPECIAL,
+  INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF OR
+  INABILITY TO USE THIS PRODUCT OR DOCUMENTATION, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGES. IN PARTICULAR, HIGHPOINT SHALL NOT HAVE
+  LIABILITY FOR ANY HARDWARE, SOFTWARE, OR DATA STORED USED WITH THE
+  PRODUCT, INCLUDING THE COSTS OF REPAIRING, REPLACING, OR RECOVERING
+  SUCH HARDWARE, OR DATA.
+
+
+#############################################################################
+2. Build the driver as a kernel module
+#############################################################################
+
+  1) Install kernel build tools (gcc, binutils, make, etc.)
+  
+  2) Setup the kernel source/headers
+  
+     To build driver modules for a specific kernel, you shall use same 
+     configuration for the kernel and the driver. Otherwise, the driver may 
+     be unable to load, or behave abnormally.
+     
+     - For Linux kernel 2.6 / 3.x / 4.x / -
+     
+     On most distributions based on kernel 2.6/3.x/4.x, an exploded source tree is
+     not required to build a driver against the currently in-use kernel. As long
+     as the system has kernel headers setup under /lib/modules/`uname -r`/build,
+     you can simply run "make" to build the driver.
+
+     If you want to build the driver against a custom kernel source, you must
+     setup the kernel source manually and run "make" under kernel source tree
+     to setup kernel headers.
+
+     - For Linux kernel 2.4 -
+    
+     The source code can not be built on linux kernel 2.4 any more. 
+
+  3) Build the driver
+  
+     After you have configured the kernel source/headers you can build the driver
+     by following commands (assume you have extracted the driver source under
+     directory rr3xxx-linux-src-1.xx):
+
+        # cd rr3xxx-linux-src-1.xx/
+        # make
+        
+     You can append below options to "make" command:
+     
+        KERNELDIR=...
+           Specify kernel source directory. If not specified the driver will
+           use /lib/modules/{kernel-version}/build/ as the default location.
+           This option is needed if you have a manually configured kernel
+           source tree.
+     
+        CROSS_COMPILE=...
+           Specify cross compiler prefix.
+           
+        ARCH=...
+           Specify target system machine architecture.
+           Currently only i386 and x86_64 is supported.
+
+  4) Install/upgrade the driver
+  
+     If you are building driver for currently in-use kernel you can use
+     "make install" to install or upgrade the driver:
+
+        # cd rr3xxx-linux-src-1.xx/
+        # make install
+        
+     The KERNELDIR=... parameter may be required, e.g.
+     
+        # make install KERNELDIR=/usr/src/linux-2.6
+
+     "make install" command will copy the driver module to the directory
+     /lib/modules/`uname -r`/kernel/drivers/scsi, and update the initrd file
+     if it contains an old version driver.
+        
+     If your system is installed on the controller, a reboot is required
+     to make the new driver take effect.
+     
+     Please note "make install" may not work on some distributions. In that
+     case you have to install the driver manually.
+     
+     After the driver is installed, it can be loaded manually by
+
+        # modprobe hptiop
+        
+     To load the driver automatically during system startup, you can either
+     put it into initrd file or configure a /etc/rc.d script to load it.
+        
+     
+#############################################################################
+3. Revision History
+#############################################################################
+  v1.11.0  09/19/2017
+      * Fix a bug that driver failed to initialize when IOMMU is enabled on Linux (need to update the firmware version to v1.8.16.0 or later).
+	  
+  v1.10.0  06/04/2014
+      * Support kernel 4.x.
+     
+  v1.9.3  09/29/2014
+      * Remove redundant obj files.
+      
+  v1.9.2  09/26/2014 
+      * Add SAS media changer device support.
+
+  v1.9.1  08/21/2014
+      * Add SAS Tape support.
+ 
+  v1.9  04/02/2013
+      * Add RR3610/RR3611/RR3620/RR3622/RR3640/RR3660/RR3680/RR3690 support.
+
+  v1.8 08/23/2012
+        * Support RR4522.
+
+  v1.7 08/09/2012
+        * Support RR4520.
+
+  v1.6.09.0714 07/14/2009
+        * Support linux kernel up to 2.6.30.
+        * Add RR4460 support.
+
+  v1.5.09.0121 01/21/2009
+        * Add RR4321 support.
+
+  v1.4.08.1124 11/24/2008
+        * Fix error when transform same redundant array to same size.
+
+  v1.4.08.0811 08/11/2008
+        * Fix wrong access on sense buffer pointer.
+        * Add RR3530/3560/4322/4210/4211/4310/4311 support.
+
+  v1.4  01/17/2008
+        * Add SCSI pass-through support.
+	
+  v1.3  11/07/2007
+        * Fix sense data length overflow.
+        * Add RR3510/3521/3522/3410/3540/4320 support.
+
+  v1.2  05/11/2007
+        * Add interface version.
+        * Add RR3520 support.
+
+  v1.1  09/30/2006
+        * Fix spin lock in hptiop_reset_hba.
+        * Add pci posting flush.
+        * Use /dev/hptiop for ioctl interface.
+
+  v1.0  04/11/2006
+        * First Release.
+        
+#############################################################################
+4. Technical support and service
+#############################################################################
+
+  If you have questions about installing or using your HighPoint product,
+  check the user's guide or readme file first, and you will find answers to
+  most of your questions here. If you need further assistance, please
+  contact us. We offer the following support and information services:
+
+  1)  The HighPoint Web Site provides information on software upgrades,
+      answers to common questions, and other topics. The Web Site is
+      available from Internet 24 hours a day, 7 days a week, at
+      http://www.highpoint-tech.com.
+
+  2)  For technical support, send e-mail to support@highpoint-tech.com
+
+  NOTE: Before you send an e-mail, please visit our Web Site
+        (http://www.highpoint-tech.com) to check if there is a new or 
+        updated device driver for your system.
+

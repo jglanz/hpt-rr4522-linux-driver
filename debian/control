@@ -1,0 +1,25 @@
+Source: hptiop-dkms
+Section: kernel
+Priority: optional
+Maintainer: Jonathan Glanz <jonathan.glanz@gmail.com>
+Build-Depends: debhelper-compat (= 13), dh-sequence-dkms
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/jglanz/hpt-rr4522-linux-driver
+Vcs-Browser: https://github.com/jglanz/hpt-rr4522-linux-driver
+Vcs-Git: https://github.com/jglanz/hpt-rr4522-linux-driver.git
+
+Package: hptiop-dkms
+Architecture: all
+Depends: ${misc:Depends}
+Description: HighPoint RocketRAID 3xxx/4xxx driver (DKMS)
+ Out-of-tree build of the hptiop SCSI driver for HighPoint RocketRAID
+ 3xxx/4xxx controllers (including the RR4520/RR4522), installed through DKMS
+ so that it takes precedence over the driver shipped with the kernel.
+ .
+ Compared with the in-kernel driver it adds what the HighPoint RAID
+ management service (hptsvr/hptraidconf) needs to detect and manage the
+ controller: the /proc/scsi/hptiop interface, bidirectional mapping of
+ management commands, and firmware device hot-plug notifications.
+ .
+ Supported kernels: Ubuntu 24.04 (6.8) and Ubuntu 26.04 (7.0).

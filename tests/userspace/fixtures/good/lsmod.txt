@@ -1,0 +1,3 @@
+Module                  Size  Used by
+hptiop                 45056  1
+ahci                   49152  0

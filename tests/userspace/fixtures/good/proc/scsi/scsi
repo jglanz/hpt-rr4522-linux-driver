@@ -1,0 +1,10 @@
+Attached devices:
+Host: scsi0 Channel: 00 Id: 00 Lun: 00
+  Vendor: HPT      Model: VD0-0            Rev: 4.00
+  Type:   Direct-Access                    ANSI  SCSI revision: 05
+Host: scsi0 Channel: 00 Id: 32 Lun: 00
+  Vendor: HPT      Model: RCM DEVICE       Rev: 4.00
+  Type:   Processor                        ANSI  SCSI revision: 05
+Host: scsi1 Channel: 00 Id: 00 Lun: 00
+  Vendor: ATA      Model: Samsung SSD 850  Rev: 3B6Q
+  Type:   Direct-Access                    ANSI  SCSI revision: 05

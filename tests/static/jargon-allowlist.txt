@@ -1,0 +1,6 @@
+# <path glob> <fixed string that may appear on a matching line>
+# Package maintainer identity and repository coordinates.
+debian/* Jonathan Glanz <jonathan.glanz@gmail.com>
+* github.com/jglanz/hpt-rr4522-linux-driver
+* jglanz/hpt-rr4522-linux-driver
+LICENSE Jonathan Glanz
